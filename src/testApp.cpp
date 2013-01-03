@@ -3,6 +3,8 @@
 const int width = 800;
 const int height = 600;
 
+#define STRINGIFY(A) #A
+
 //--------------------------------------------------------------
 void testApp::setup(){
 	counter = 0;
@@ -62,7 +64,11 @@ void testApp::setup(){
     frameRate = 20;
     showChannel = 1;
     
-    /*
+    // shader
+    
+       fbo.allocate(width,height);
+    
+    
     string shaderProgram = STRINGIFY(
                                      uniform sampler2DRect tex0;
                                      uniform sampler2DRect tex1;
@@ -85,7 +91,9 @@ void testApp::setup(){
                                          gl_FragColor = color;
                                      }
                                      );
-    */
+    shader.setupShaderFromSource(GL_FRAGMENT_SHADER, shaderProgram);
+    shader.linkProgram();
+    
     
     
     
@@ -99,21 +107,21 @@ void testApp::update(){
     
 
     
-//    fbo.begin();
-//    ofClear(0, 0, 0,255);
-//    shader.begin();
-//     mClient.bind();
-//     mClient2.bind();
-//    // Pass the syphon1 texture
-//    shader.setUniformTexture("tex0", mClient.mTex , 1 );
-//    // Pass the syphon2 texture
-//    shader.setUniformTexture("tex1", mClient2.mTex , 2 );
-//
-//
-//       mClient.unbind();
-//    mClient2.unbind();
-//    shader.end();
-//    fbo.end();
+    fbo.begin();
+    ofClear(0, 0, 0,255);
+    shader.begin();
+     mClient.bind();
+     mClient2.bind();
+    // Pass the syphon1 texture
+    shader.setUniformTexture("tex0", mClient.mTex , 1 );
+    // Pass the syphon2 texture
+    shader.setUniformTexture("tex1", mClient2.mTex , 2 );
+
+
+       mClient.unbind();
+    mClient2.unbind();
+    shader.end();
+    fbo.end();
 
 
     
@@ -127,26 +135,26 @@ void testApp::draw(){
     
     individualTextureSyphonServer.publishTexture(&fbo.getTextureReference());
      
-    if (showChannel == 1){
-        mClient.bind();
-        individualTextureSyphonServer.publishTexture(&mClient.mTex );
-        mClient.unbind();
-            
-        }
-    if( showChannel == 2){
-            mClient2.bind();
-            individualTextureSyphonServer.publishTexture(&mClient2.mTex);
-            mClient2.unbind();
-            
-        }
-    if ( showChannel == 3)
-        
-        {
-            mClient3.bind();
-            individualTextureSyphonServer.publishTexture(&mClient3.mTex);
-            mClient3.unbind();
-            
-        } 
+//    if (showChannel == 1){
+//        mClient.bind();
+//        individualTextureSyphonServer.publishTexture(&mClient.mTex );
+//        mClient.unbind();
+//            
+//        }
+//    if( showChannel == 2){
+//            mClient2.bind();
+//            individualTextureSyphonServer.publishTexture(&mClient2.mTex);
+//            mClient2.unbind();
+//            
+//        }
+//    if ( showChannel == 3)
+//        
+//        {
+//            mClient3.bind();
+//            individualTextureSyphonServer.publishTexture(&mClient3.mTex);
+//            mClient3.unbind();
+//            
+//        } 
    midi.showMidi();
 //
     ofPushMatrix();
